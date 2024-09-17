@@ -18,7 +18,7 @@ def monkey_saddle(x, y):
 def graficar_punto(ax, x, y, z):
     scatter = ax.scatter(x, y, z, c='black', marker='o')
     plt.draw()
-    plt.pause(1)
+    plt.pause(0.5)
     return scatter 
 
 def borrar_punto(scatter):
@@ -27,8 +27,8 @@ def borrar_punto(scatter):
     
 def animar_punto():
     # Configuración de la gráfica
-    limites_negativos = -2000
-    limites_positivos = 2000
+    limites_negativos = -20
+    limites_positivos = 20
     pasos = 40
     eje_x = np.linspace(limites_negativos, limites_positivos, pasos)
     eje_y = np.linspace(limites_negativos, limites_positivos, pasos)
@@ -50,14 +50,18 @@ def animar_punto():
 
     # Controlar el estado de la ventana
     try:
-        for _ in range(50):
+        while True:
             if not plt.fignum_exists(fig.number):
                 break  # Salir si la ventana ha sido cerrada
+            if x < limites_negativos or x > limites_positivos or y < limites_negativos or y > limites_positivos:
+                plt.pause(10)
+                break
             scatter = graficar_punto(ax, x, y, z)
             grad_x, grad_y = gradiente(monkey_saddle, x, y)
             x -= grad_x * 0.01  # Ajuste para evitar saltos grandes
             y -= grad_y * 0.01  # Ajuste para evitar saltos grandes
             z = monkey_saddle(x, y)
+            print(x, y, z)
             borrar_punto(scatter)
 
     except KeyboardInterrupt:
