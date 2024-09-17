@@ -40,11 +40,11 @@ def animar_punto():
     ax.set_xlabel("Eje X")
     ax.set_ylabel("Eje Y")
     ax.set_zlabel("Eje Z")
-
     ax.set_xlim([limites_negativos, limites_positivos])
     ax.set_ylim([limites_negativos, limites_positivos])
     ax.set_zlim(np.min(Z), np.max(Z))
 
+    # Punto inicial
     x, y = 1, 1
     z = monkey_saddle(x, y)
 
@@ -54,7 +54,7 @@ def animar_punto():
             if not plt.fignum_exists(fig.number):
                 break  # Salir si la ventana ha sido cerrada
             if x < limites_negativos or x > limites_positivos or y < limites_negativos or y > limites_positivos:
-                plt.pause(10)
+                plt.pause(5)  # Salir 5 segundos después de que el punto haya salido del rango de la gráfica
                 break
             scatter = graficar_punto(ax, x, y, z)
             grad_x, grad_y = gradiente(monkey_saddle, x, y)
