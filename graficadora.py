@@ -2,26 +2,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class AnimadorGradiente:
-    def __init__(self, funcion, x_inicial, y_inicial, limite_grafica=200, ajuste=0.0001):
-        self.funcion = funcion
-        self.x = x_inicial
-        self.y = y_inicial
-        self.z = funcion(x_inicial, y_inicial)
-        self.ajuste = ajuste
-        self.limite_grafica = limite_grafica
-        self.limites_positivos = self.limite_grafica
-        self.limites_negativos = -self.limites_positivos
-        self.fig, self.ax = self._configurar_grafica()
+    def __init__(self, funcion, x_inicial, y_inicial, limite_grafica=200, pasos=40, ajuste=0.0001):
+        
+        """
+        Inicializa el animador de gradiente con la función, punto inicial, límite de la gráfica, pasos y ajuste.
+        :param funcion:          funcion
+        :param x_inicial:        punto inicial en x
+        :param y_inicial:        punto inicial en y
+        :param limite_grafica:   limite de la grafica, 200 por default
+        :param pasos:            cantidad de cuadriculas en la grafica, 40 por default
+        :param ajuste:           ajuste del salto del punto, 0.0001 por default
+        """
+        
+        self.funcion            = funcion
+        self.x                  = x_inicial
+        self.y                  = y_inicial
+        self.z                  = funcion(x_inicial, y_inicial)
+        self.ajuste             = ajuste
+        self.limite_grafica     = limite_grafica
+        self.limites_positivos  = self.limite_grafica
+        self.limites_negativos  = -self.limites_positivos
+        self.pasos              = pasos
+        self.fig, self.ax       = self._configurar_grafica()
 
     def _configurar_grafica(self):
-        pasos = 40
-        eje_x = np.linspace(self.limites_negativos, self.limites_positivos, pasos)
-        eje_y = np.linspace(self.limites_negativos, self.limites_positivos, pasos)
-        X, Y = np.meshgrid(eje_x, eje_y)
-        Z = self.funcion(X, Y)
+        eje_x = np.linspace(self.limites_negativos, self.limites_positivos, self.pasos)
+        eje_y = np.linspace(self.limites_negativos, self.limites_positivos, self.pasos)
+        X, Y  = np.meshgrid(eje_x, eje_y)
+        Z     = self.funcion(X, Y)
 
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection="3d")
+        ax  = fig.add_subplot(111, projection="3d")
         ax.plot_surface(X, Y, Z, cmap="coolwarm", alpha=0.7)
         ax.set_xlabel("Eje X")
         ax.set_ylabel("Eje Y")
@@ -70,7 +81,7 @@ class AnimadorGradiente:
 
                 # Revisa si el punto se ha salido de la grafica
                 if self.x < self.limites_negativos or self.x > self.limites_positivos or self.y < self.limites_negativos or self.y > self.limites_positivos:
-                    print("El punto ha salido de los limites en ({:.2f}, {:.2f}, {:.2f}) Terminando la animacion".format(self.x, self.y, self.z))
+                    print("El punto ha salido de los limites en ({:.3f}, {:.3f}, {:.3f}) Terminando la animacion".format(self.x, self.y, self.z))
                     plt.pause(5)
                     break
                 
@@ -84,7 +95,7 @@ class AnimadorGradiente:
 
                 # Revisa si ha llegado a una cresta o valle
                 if np.abs(grad_x * self.ajuste) < 1e-5 and np.abs(grad_y * self.ajuste) < 1e-5:
-                    print("Valle o cresta encontrada cerca de ({:.5f}, {:.5f}, {:.5f}) Terminando la animacion".format(self.x, self.y, self.z))
+                    print("Valle o cresta encontrada cerca de ({:.3f}, {:.3f}, {:.3f}) Terminando la animacion".format(self.x, self.y, self.z))
                     plt.pause(5)
                     break
         except KeyboardInterrupt:
