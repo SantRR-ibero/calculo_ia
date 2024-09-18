@@ -16,7 +16,7 @@ def monkey_saddle(x, y):
     return x**3 - 3*x*y**2
 
 def graficar_punto(ax, x, y, z):
-    scatter = ax.scatter(x, y, z, c='black', marker='o')
+    scatter = ax.scatter(x, y, z, c = "black", marker = "o")
     plt.draw()
     plt.pause(0.000001)
     return scatter 
@@ -36,7 +36,7 @@ def animar_punto():
     Z = monkey_saddle(X, Y)
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
-    ax.plot_surface(X, Y, Z, cmap='coolwarm', alpha=0.7)
+    ax.plot_surface(X, Y, Z, cmap = "coolwarm", alpha=0.7)
     ax.set_xlabel("Eje X")
     ax.set_ylabel("Eje Y")
     ax.set_zlabel("Eje Z")
