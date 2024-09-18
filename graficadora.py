@@ -48,7 +48,7 @@ def animar_punto():
     ajuste = 0.0001
     x, y = 200, 0
     z = monkey_saddle(x, y)
-    print("|       X       |       Y       |       Z       |     Gradx     |     Grady     |DesplazamientoX|DesplazamientoY")
+    print("|       X       |       Y       |       Z       |     GradX     |     GradY     |DesplazamientoX|DesplazamientoY")
 
     # Controlar el estado de la ventana
     try:
