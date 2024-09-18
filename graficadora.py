@@ -18,7 +18,7 @@ def monkey_saddle(x, y):
 def graficar_punto(ax, x, y, z):
     scatter = ax.scatter(x, y, z, c='black', marker='o')
     plt.draw()
-    plt.pause(0.5)
+    plt.pause(0.000001)
     return scatter 
 
 def borrar_punto(scatter):
@@ -27,8 +27,8 @@ def borrar_punto(scatter):
     
 def animar_punto():
     # Configuración de la gráfica
-    limites_negativos = -20
-    limites_positivos = 20
+    limites_positivos = 200
+    limites_negativos = -limites_positivos
     pasos = 40
     eje_x = np.linspace(limites_negativos, limites_positivos, pasos)
     eje_y = np.linspace(limites_negativos, limites_positivos, pasos)
@@ -44,9 +44,11 @@ def animar_punto():
     ax.set_ylim([limites_negativos, limites_positivos])
     ax.set_zlim(np.min(Z), np.max(Z))
 
-    # Punto inicial
-    x, y = 1, 1
+    # Punto inicial y función
+    ajuste = 0.0001
+    x, y = 200, 0
     z = monkey_saddle(x, y)
+    print("|       X       |       Y       |       Z       |     Gradx     |     Grady     |DesplazamientoX|DesplazamientoY")
 
     # Controlar el estado de la ventana
     try:
@@ -58,10 +60,16 @@ def animar_punto():
                 break
             scatter = graficar_punto(ax, x, y, z)
             grad_x, grad_y = gradiente(monkey_saddle, x, y)
-            x -= grad_x * 0.01  # Ajuste para evitar saltos grandes
-            y -= grad_y * 0.01  # Ajuste para evitar saltos grandes
+            if ((grad_x * ajuste) <= 0.1 and (grad_y * ajuste) <= 0.1) and ajuste < 0.1:   # Aumenta el valor del ajuste para que no tarde tanto en encontrar valles o crestas
+                ajuste *= 10
+            if (grad_x * ajuste) <= 1e-4 and (grad_y * ajuste) <= 1e-4:   # Si llega a un valle o a una cresta, salir después de 5 segundos
+                print("Valle o cresta encontrada cerca de: ", x, y, z)   # Muestra en qué coordenadas se encontró un valle o cresta
+                plt.pause(5)
+                break
+            x -= grad_x * ajuste  # Ajuste para evitar saltos grandes
+            y -= grad_y * ajuste  # Ajuste para evitar saltos grandes
             z = monkey_saddle(x, y)
-            print(x, y, z)
+            print("| {:<14.2f}| {:<14.2f}| {:<14.2f}| {:<14.2f}| {:<14.2f}| {:<14.2f}| {:<14.2f}| {:<14f}|".format(x, y, z, grad_x, grad_y, grad_x * ajuste, grad_y * ajuste, ajuste))
             borrar_punto(scatter)
 
     except KeyboardInterrupt:
